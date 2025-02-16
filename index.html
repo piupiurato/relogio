@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<title>relógio digital e temporizador! </title>
+</head>
+<body>
+	<div class="relogio-container">
+		<h2>Relógio Digital</h2>
+		<div id="relogio">00:00:00</div>
+	</div>
+
+	<!-- Temporizador -->
+<div class="temporizador-container">
+    <h2>Temporizador</h2>
+    <input type="number" id="inputTempo" placeholder="Segundos">
+    <button id="iniciar">Iniciar</button>
+    <button id="parar">Parar</button>
+    <button id="resetar">Resetar</button>
+    <div id="temporizador">00:00</div>
+</div>
+
+	<script>
+    // Relógio Digital
+    function atualizarRelogio() {
+        let agora = new Date();
+        let horas = agora.getHours().toString().padStart(2, "0");
+        let minutos = agora.getMinutes().toString().padStart(2, "0");
+        let segundos = agora.getSeconds().toString().padStart(2, "0");
+        document.getElementById("relogio").innerText = `${horas}:${minutos}:${segundos}`;
+    }
+    setInterval(atualizarRelogio, 1000);
+    atualizarRelogio();
+
+    // Temporizador
+    let intervalo, tempoRestante;
+
+    document.getElementById("iniciar").addEventListener("click", function() {
+        let inputTempo = document.getElementById("inputTempo").value;
+        tempoRestante = parseInt(inputTempo);
+
+        if (!isNaN(tempoRestante) && tempoRestante > 0) {
+            atualizarTemporizador();
+            intervalo = setInterval(() => {
+                tempoRestante--;
+                atualizarTemporizador();
+                if (tempoRestante <= 0) {
+                    clearInterval(intervalo);
+                    alert("Tempo esgotado! ⏳");
+                }
+            }, 1000);
+        }
+    });
+
+    document.getElementById("parar").addEventListener("click", function() {
+        clearInterval(intervalo);
+    });
+
+    document.getElementById("resetar").addEventListener("click", function() {
+        clearInterval(intervalo);
+        document.getElementById("temporizador").innerText = "00:00";
+        document.getElementById("inputTempo").value = "";
+    });
+
+    function atualizarTemporizador() {
+        let minutos = Math.floor(tempoRestante / 60).toString().padStart(2, "0");
+        let segundos = (tempoRestante % 60).toString().padStart(2, "0");
+        document.getElementById("temporizador").innerText = `${minutos}:${segundos}`;
+    }
+</script>
+
+</body>
+</html>
